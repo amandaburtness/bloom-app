@@ -3,10 +3,11 @@ const express = require("express")
 const app = express()
 const port = process.env.PORT || 9000 // allow port to be dynamic by using environment variables and an other option 
 const cors = require("cors")
+const path = require("path")
 
 app.use(cors())
 app.use(express.json())
-
+app.use(express.static(path.join(__dirname,"client/build"))) // bring to homepage
 
 // .use covers all requests (put post, get, ext.)
 app.use("/api/", (_, res) => { // underscore is a placeholder for req becuase request object is not going to be used in this function
@@ -19,7 +20,10 @@ app.listen(port, () => {
   console.log(`server is on port ${port}`)
 })
 
-
+// bring you back to the home page if there is a weird end point
+app.use("*", (_, res) => {
+  res.sendFile(path.join(__dirname,"client/build","index.html"))
+})
 
 
 
